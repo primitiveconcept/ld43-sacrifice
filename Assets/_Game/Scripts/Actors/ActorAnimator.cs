@@ -5,13 +5,16 @@
 
     public partial class ActorAnimator : MonoBehaviour
     {
+        public const string HorizontalVelocity = "HorizontalVelocity";
         public const string HorizontalSpeed = "HorizontalSpeed";
         public const string VerticalSpeed = "VerticalSpeed";
+        public const string VerticalVelocity = "VerticalVelocity";
 
         private Actor actor;
         private IMovable movable;
 
         private Animator _animator;
+        private SpriteRenderer _spriteRenderer;
 
 
         private Animator Animator
@@ -21,6 +24,17 @@
                 if (this._animator == null)
                     this._animator = this.actor.Animator;
                 return this._animator;
+            }
+        }
+
+
+        private SpriteRenderer SpriteRenderer
+        {
+            get
+            {
+                if (this._spriteRenderer == null)
+                    this._spriteRenderer = this.actor.SpriteRenderer;
+                return this._spriteRenderer;
             }
         }
         
@@ -36,13 +50,19 @@
 
         public void Update()
         {
-            if (this.movable.CurrentSpeed.x == 0)
-            {
-                Debug.Log("ZERO");
-            }
-            
             this.Animator.SetFloat(HorizontalSpeed, this.movable.CurrentSpeed.x);
+            this.Animator.SetFloat(HorizontalVelocity, this.movable.CurrentVelocity.x);
             this.Animator.SetFloat(VerticalSpeed, this.movable.CurrentSpeed.y);
+            this.Animator.SetFloat(VerticalVelocity, this.movable.CurrentVelocity.y);
+
+            if (this.movable.CurrentVelocity.x < 0)
+            {
+                this.SpriteRenderer.flipX = true;
+            }
+            else if (this.movable.CurrentVelocity.x > 0)
+            {
+                this.SpriteRenderer.flipX = false;
+            }
         }
 
 
@@ -82,7 +102,9 @@ namespace LetsStartAKittyCult
                     ActorAnimator actorAnimator = this.target as ActorAnimator;
                     AnimatorController controller = (AnimatorController)(actorAnimator.GetComponent<Animator>().runtimeAnimatorController);
                     AddFloatParameter(controller, HorizontalSpeed);
+                    AddFloatParameter(controller, HorizontalVelocity);
                     AddFloatParameter(controller, VerticalSpeed);
+                    AddFloatParameter(controller, VerticalVelocity);
                 }
             }
 
