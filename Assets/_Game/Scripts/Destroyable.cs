@@ -68,8 +68,11 @@
         {
             if (this.destroyClip != null)
                 AudioPlayer.Play(this.destroyClip);
-
-            PoolManager.Despawn(this.gameObject);
+            
+            if (PoolManager.IsPooled(this.gameObject))
+                PoolManager.Despawn(this.gameObject);
+            else
+                Destroy(this.gameObject);
         }
     }
 }

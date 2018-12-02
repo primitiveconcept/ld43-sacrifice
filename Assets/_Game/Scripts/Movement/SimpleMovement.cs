@@ -88,7 +88,8 @@
 
         public void FixedUpdate()
         {
-            //this.rigidbody2D.velocity = Vector2.zero;
+            if (this.moveDirection == Vector2.zero)
+                this.rigidbody2D.velocity = Vector2.zero;
 
             if (GameTime.IsPaused)
                 return;

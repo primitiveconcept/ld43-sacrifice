@@ -4,9 +4,7 @@
     using UnityEngine;
 
 
-    public class Actor : MonoBehaviour,
-                         IHasSprite,
-                         IHasAnimator
+    public class Actor : MonoBehaviour
     {
         [SerializeField]
         private int equippedItemIndex;
@@ -24,23 +22,15 @@
         private Inventory.ItemEntryEvent onSelectedItemChanged;
 
         private Inventory inventory;
-        private SpriteRenderer spriteRenderer;
-        private Animator animator;
         private Weapon equippedWeapon;
         private UsableItem equippedItem;
+        private SpriteSorter spriteSorter;
 
         private float weaponCooldown;
         private float itemCooldown;
 
 
         #region Properties
-        public Animator Animator
-        {
-            get { return this.animator; }
-            set { this.animator = value; }
-        }
-
-
         public UsableItem EquippedItem
         {
             get { return this.equippedItem; }
@@ -59,19 +49,18 @@
         }
 
 
-        public SpriteRenderer SpriteRenderer
+        public SpriteSorter SpriteSorter
         {
-            get { return this.spriteRenderer; }
-            set { this.spriteRenderer = value; }
+            get { return this.spriteSorter; }
         }
         #endregion
 
 
         public void Awake()
         {
+            this.spriteSorter = GetComponent<SpriteSorter>();
             this.inventory = GetComponent<Inventory>();
-            this.NestSprite();
-            this.NestAnimator();
+
             EquipWeapon(this.equippedWeaponIndex);
             EquipItem(this.equippedItemIndex);
         }
@@ -221,7 +210,7 @@
 
             ItemEntry itemEntry = this.inventory[this.equippedItemIndex];
 
-            Vector2 direction = this.spriteRenderer.flipX
+            Vector2 direction = this.spriteSorter.SpriteRenderer.flipX
                                     ? Vector2.left
                                     : Vector2.right;
 
@@ -247,7 +236,7 @@
 
             ItemEntry itemEntry = this.inventory[this.equippedWeaponIndex];
 
-            Vector2 direction = this.spriteRenderer.flipX
+            Vector2 direction = this.spriteSorter.SpriteRenderer.flipX
                                     ? Vector2.left
                                     : Vector2.right;
 

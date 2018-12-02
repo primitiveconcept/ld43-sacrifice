@@ -3,16 +3,16 @@
     using UnityEngine;
 
 
-    public interface IHasSprite
+    public interface INestedSprite
     {
         SpriteRenderer SpriteRenderer { get; set; }
     }
 
 
-    public static class HasSpriteExtensions
+    public static class NestedSpriteExtensions
     {
         public static void NestSprite<T>(this T gameObject)
-            where T: MonoBehaviour, IHasSprite
+            where T: MonoBehaviour, INestedSprite
         {
             SpriteRenderer spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
             if (spriteRenderer == null)

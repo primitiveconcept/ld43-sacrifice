@@ -3,16 +3,16 @@
     using UnityEngine;
 
 
-    public interface IHasAnimator
+    public interface INestedAnimator
     {
         Animator Animator { get; set; }
     }
 
 
-    public static class HasAnimatorExtensions
+    public static class NestedAnimatorExtensions
     {
         public static void NestAnimator<T>(this T gameObject)
-            where T : MonoBehaviour, IHasAnimator
+            where T : MonoBehaviour, INestedAnimator
         {
             Animator animator = gameObject.GetComponent<Animator>();
             if (animator == null)

@@ -70,6 +70,8 @@
 
             if (this.Current == this.Min)
                 this.onDepleted.Invoke();
+            else if (this.invulnerabilityDuration > 0)
+                EnableTemporaryInvulnerability();
         }
 
 
@@ -89,16 +91,17 @@
             yield return null; // Hack, sprite renderer may not be available on this frame.
 
             SpriteRenderer spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            Color originalColor = spriteRenderer.color;
             while (invulnerabilityCounter < this.invulnerabilityDuration)
             {
-                spriteRenderer.color = spriteRenderer.color == Color.white
+                spriteRenderer.color = spriteRenderer.color == originalColor
                                            ? this.invulnerabilityFlickerColor
-                                           : Color.white;
+                                           : originalColor;
                 invulnerabilityCounter += GameTime.DeltaTime;
                 yield return new WaitForSeconds(this.flickerInterval);
             }
 
-            spriteRenderer.color = Color.white;
+            spriteRenderer.color = originalColor;
             this.isInvulnerable = false;
         }
     }

@@ -13,36 +13,15 @@
         private Actor actor;
         private IMovable movable;
 
-        private Animator _animator;
-        private SpriteRenderer _spriteRenderer;
+        private SpriteSorter spriteSorter;
 
 
-        private Animator Animator
-        {
-            get
-            {
-                if (this._animator == null)
-                    this._animator = this.actor.Animator;
-                return this._animator;
-            }
-        }
-
-
-        private SpriteRenderer SpriteRenderer
-        {
-            get
-            {
-                if (this._spriteRenderer == null)
-                    this._spriteRenderer = this.actor.SpriteRenderer;
-                return this._spriteRenderer;
-            }
-        }
         
-
         public void Awake()
         {
             this.actor = GetComponent<Actor>();
             this.movable = GetComponent<IMovable>();
+            this.spriteSorter = this.actor.SpriteSorter;
             this.movable.StartedMoving += Movable_OnStartedMoving;
             this.movable.StoppedMoving += Movable_OnStartedMovingOnStoppedMoving;
         }
@@ -50,18 +29,18 @@
 
         public void Update()
         {
-            this.Animator.SetFloat(HorizontalSpeed, this.movable.CurrentSpeed.x);
-            this.Animator.SetFloat(HorizontalVelocity, this.movable.CurrentVelocity.x);
-            this.Animator.SetFloat(VerticalSpeed, this.movable.CurrentSpeed.y);
-            this.Animator.SetFloat(VerticalVelocity, this.movable.CurrentVelocity.y);
+            this.spriteSorter.Animator.SetFloat(HorizontalSpeed, this.movable.CurrentSpeed.x);
+            this.spriteSorter.Animator.SetFloat(HorizontalVelocity, this.movable.CurrentVelocity.x);
+            this.spriteSorter.Animator.SetFloat(VerticalSpeed, this.movable.CurrentSpeed.y);
+            this.spriteSorter.Animator.SetFloat(VerticalVelocity, this.movable.CurrentVelocity.y);
 
             if (this.movable.CurrentVelocity.x < 0)
             {
-                this.SpriteRenderer.flipX = true;
+                this.spriteSorter.SpriteRenderer.flipX = true;
             }
             else if (this.movable.CurrentVelocity.x > 0)
             {
-                this.SpriteRenderer.flipX = false;
+                this.spriteSorter.SpriteRenderer.flipX = false;
             }
         }
 

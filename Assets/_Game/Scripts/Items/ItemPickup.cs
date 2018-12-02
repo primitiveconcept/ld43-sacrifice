@@ -6,7 +6,7 @@
 	
 
 	public class ItemPickup : MonoBehaviour,
-							IHasSprite
+							INestedSprite
 	{
 		private static GameObject poolObject;
 

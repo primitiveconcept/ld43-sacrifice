@@ -119,8 +119,15 @@
                     return managedPools[prefab];
             }
 
-            Debug.LogError("PoolManager couldn't find Pool for instance: " + instance.name);
+            Debug.LogWarning("PoolManager couldn't find Pool for instance: " + instance.name);
             return null;
+        }
+
+
+        public static bool IsPooled(GameObject instance)
+        {
+            Pool pool = GetPool(instance);
+            return pool != null;
         }
 
 

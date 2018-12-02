@@ -60,13 +60,20 @@
             {
                 this.actor.EquipPreviousItem();
             }
-			
-			
+
+
             if (CrossPlatformInputManager.GetButtonDown(Controls.Primary))
-                this.actor.UseEquippedWeapon();
+            {
+                this.GetComponent<Pounce>().Activate();
+                //this.actor.UseEquippedWeapon();
+            }
+                
 
             if (CrossPlatformInputManager.GetButtonDown(Controls.Secondary))
-                this.actor.UseEquippedItem();
+            {
+                //this.actor.UseEquippedItem();
+            }
+                
 
             if (CrossPlatformInputManager.GetButtonDown(Controls.ActivatePowerup))
             {
