@@ -5,6 +5,10 @@
 
     public class CaptureToy : MonoBehaviour
     {
+        [Header("Info")]
+        [SerializeField]
+        private string toyName;
+
         [Header("Objective")]
         [SerializeField]
         private int targetScore = 3;
@@ -59,6 +63,12 @@
         public int TargetScore
         {
             get { return this.targetScore; }
+        }
+
+
+        public string ToyName
+        {
+            get { return this.toyName; }
         }
         #endregion
 
@@ -164,6 +174,9 @@
 
         public void Update()
         {
+            if (!CaptureMinigame.HasStarted)
+                return;
+            
             switch (this.currentMorphType)
             {
                 case MorphType.Squish:
@@ -204,6 +217,12 @@
         }
 
 
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            Debug.Log("HIT!");
+        }
+
+
         private void PickNewMoveDirection()
         {
             int randomDirection = Random.Range(0, 4);
@@ -212,12 +231,6 @@
                 PickNewMoveDirection();
             else
                 this.currentMoveDirection = result;
-        }
-
-
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            Debug.Log("HIT!");
         }
     }
 }

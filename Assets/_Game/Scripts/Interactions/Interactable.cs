@@ -17,13 +17,12 @@
         [SerializeField]
         private InteractableEvent onInteract;
 
+        [SerializeField]
+        private UnityEvent onApproach;
 
-        public void Interact(GameObject other)
-        {
-            Debug.Log("Interacted with: " + this.gameObject.name);
-            this.onInteract.Invoke(other);
-        }
-        
+        [SerializeField]
+        private UnityEvent onLeave;
+
 
         public void AllowInteraction(GameObject other)
         {
@@ -37,6 +36,7 @@
 
             this.captionField.text = this.captionText;
             this.captionField.gameObject.SetActive(true);
+            this.onApproach.Invoke();
         }
 
 
@@ -48,6 +48,14 @@
                 return;
 
             this.captionField.gameObject.SetActive(false);
+            this.onLeave.Invoke();
+        }
+
+
+        public void Interact(GameObject other)
+        {
+            Debug.Log("Interacted with: " + this.gameObject.name);
+            this.onInteract.Invoke(other);
         }
 
 

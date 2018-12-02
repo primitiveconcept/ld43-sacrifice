@@ -6,6 +6,10 @@
 
     public class Cat : MonoBehaviour
     {
+        [Header("Blessing")]
+        [SerializeField]
+        private float blessAmount = 0.35f;
+
         [SerializeField]
         private float blessingCooldown = 1f;
 
@@ -73,6 +77,7 @@
             if (this.isBlessing)
                 return;
 
+            human.AddBlessing(this.blessAmount);
             this.isBlessing = true;
             this.blessingCooldownTimer = this.blessingCooldown;
         }

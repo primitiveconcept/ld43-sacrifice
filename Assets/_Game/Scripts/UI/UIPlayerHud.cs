@@ -8,7 +8,7 @@
 	public class UIPlayerHud : MonoBehaviour
 	{
 		[SerializeField]
-		private UIMeter healthMeter;
+		private UIMeter affectionMeter;
 
 		[Header("Score")]
 		[SerializeField]
@@ -27,9 +27,9 @@
 		private RectTransform extraLifeMeter;
 		
 		
-		public UIMeter HealthMeter
+		public UIMeter AffectionMeter
 		{
-			get { return this.healthMeter; }
+			get { return this.affectionMeter; }
 		}
 
 

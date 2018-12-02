@@ -1,12 +1,13 @@
 ﻿namespace LetsStartAKittyCult
 {
-    using System.Runtime.CompilerServices;
     using UnityEngine;
+
+
     public class GameWorld : MonoBehaviour
     {
         private static GameWorld _instance;
 
-        
+
         #region Properties
         private static GameWorld Instance
         {

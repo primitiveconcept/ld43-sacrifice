@@ -6,16 +6,16 @@
 
 
     [Serializable]
-    public abstract class ObservableRangeInt : MonoBehaviour
+    public abstract class ObservableRangeFloat : MonoBehaviour
     {
         [SerializeField]
-        protected int current;
+        protected float current;
 
         [SerializeField]
-        protected int min = 0;
+        protected float min = 0;
 
         [SerializeField]
-        protected int max = 100;
+        protected float max = 100;
 
         [SerializeField]
         protected bool setToMaxOnStart;
@@ -25,19 +25,19 @@
 
 
         #region Properties
-        public int Current
+        public float Current
         {
             get { return this.current; }
         }
 
 
-        public int Max
+        public float Max
         {
             get { return this.max; }
         }
 
 
-        public int Min
+        public float Min
         {
             get { return this.min; }
         }
@@ -65,9 +65,9 @@
         }
 
 
-        public virtual void Increase(int amount, bool forceEvent = false)
+        public virtual void Increase(float amount, bool forceEvent = false)
         {
-            int newValue = this.current + amount;
+            float newValue = this.current + amount;
             if (newValue > this.max)
                 newValue = this.max;
 
@@ -90,9 +90,9 @@
         }
 
 
-        public virtual void Reduce(int amount, bool forceEvent = false)
+        public virtual void Reduce(float amount, bool forceEvent = false)
         {
-            int newValue = this.current - amount;
+            float newValue = this.current - amount;
             if (newValue < 0)
                 newValue = 0;
 
@@ -108,7 +108,7 @@
         }
 
 
-        public virtual void SetCurrent(int value, bool forceEvent = false)
+        public virtual void SetCurrent(float value, bool forceEvent = false)
         {
             if (value == this.current)
             {
@@ -122,7 +122,7 @@
         }
 
 
-        public virtual void SetMax(int value, bool forceEvent = false)
+        public virtual void SetMax(float value, bool forceEvent = false)
         {
             if (value < this.min)
                 value = this.min;
@@ -139,7 +139,7 @@
         }
 
 
-        public virtual void SetMin(int value, bool forceEvent = false)
+        public virtual void SetMin(float value, bool forceEvent = false)
         {
             if (value > this.max)
                 value = this.max;
@@ -166,7 +166,7 @@
 
 
         [Serializable]
-        public class ChangedEvent : UnityEvent<ObservableRangeInt>
+        public class ChangedEvent : UnityEvent<ObservableRangeFloat>
         {
         }
     }

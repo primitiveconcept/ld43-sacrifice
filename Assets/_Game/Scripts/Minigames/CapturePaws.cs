@@ -9,14 +9,17 @@
     public class CapturePaws : MonoBehaviour
     {
         [SerializeField]
+        private GameObject[] strikeZones;
+
+        [SerializeField]
         private float pawMoveSpeed = 0.1f;
-        
+
         [SerializeField]
         private float pawResetDuration;
 
         [SerializeField]
         private float maxYPosition = -0.33f;
-        
+
         [SerializeField]
         private GameObject leftPaw;
 
@@ -34,56 +37,80 @@
         private float pawResetTimer;
         private Vector3 attackPosition;
         private bool attacking;
-        
+
+
+        public void Attack(Vector3 position)
+        {
+            if (this.pawResetTimer > 0
+                || this.attacking)
+                return;
+
+            if (position.y > this.maxYPosition)
+                position.y = this.maxYPosition;
+
+            this.attackPosition = position;
+            this.attacking = true;
+        }
+
 
         public void Awake()
         {
             this.leftPawRestPosition = this.leftPaw.transform.position;
             this.rightPawRestPosition = this.rightPaw.transform.position;
+            foreach (GameObject strikeZone in this.strikeZones)
+                strikeZone.SetActive(true);
+        }
+
+
+        public void OnEnable()
+        {
+            ResetPaws();
+        }
+
+
+        public void ResetPaws()
+        {
+            this.leftPaw.transform.position = new Vector3(
+                this.leftPawRestPosition.x,
+                this.leftPawRestPosition.y,
+                this.leftPawRestPosition.z);
+            this.rightPaw.transform.position = new Vector3(
+                this.rightPawRestPosition.x,
+                this.rightPawRestPosition.y,
+                this.rightPawRestPosition.z);
         }
 
 
         public void Update()
         {
+            if (!CaptureMinigame.HasStarted)
+                return;
+            
             if (this.attacking)
             {
                 MovePawsToTarget();
                 return;
             }
-            
+
             if (this.pawResetTimer <= 0)
                 return;
 
             this.pawResetTimer -= GameTime.DeltaTime;
 
-            if (this.pawResetTimer <= 0)
-            {
-                this.leftPaw.transform.position = new Vector3(
-                    this.leftPawRestPosition.x,
-                    this.leftPawRestPosition.y,
-                    this.leftPawRestPosition.z);
-                this.rightPaw.transform.position = new Vector3(
-                    this.rightPawRestPosition.x,
-                    this.rightPawRestPosition.y,
-                    this.rightPawRestPosition.z);
-            }
-                
-        }
-        
-        
-        public void Attack(Vector3 position)
-        {
-            if (this.pawResetTimer > 0
-                || this.attacking)
-            {
-                return;
-            }
+            foreach (GameObject strikeZone in this.strikeZones)
+                strikeZone.SetActive(false);
 
-            if (position.y > this.maxYPosition)
-                position.y = this.maxYPosition;
-            
-            this.attackPosition = position;
-            this.attacking = true;
+            this.leftPaw.transform.position = new Vector3(
+                this.leftPaw.transform.position.x,
+                this.leftPaw.transform.position.y - this.pawMoveSpeed / 2,
+                this.leftPaw.transform.position.z);
+            this.rightPaw.transform.position = new Vector3(
+                this.rightPaw.transform.position.x,
+                this.rightPaw.transform.position.y - this.pawMoveSpeed / 2,
+                this.rightPaw.transform.position.z);
+
+            if (this.pawResetTimer <= 0)
+                ResetPaws();
         }
 
 
@@ -97,7 +124,7 @@
                 this.attackPosition.x + this.rightOffset,
                 this.attackPosition.y,
                 this.attackPosition.z);
-            
+
             float leftX = this.leftPaw.transform.position.x;
             float leftY = this.leftPaw.transform.position.y;
             float rightX = this.rightPaw.transform.position.x;
@@ -111,7 +138,7 @@
                 leftY -= this.pawMoveSpeed;
             else if (leftTarget.y > leftY)
                 leftY += this.pawMoveSpeed;
-            
+
             if (rightTarget.x < rightX)
                 rightX -= this.pawMoveSpeed;
             else if (rightTarget.x > rightX)
@@ -120,7 +147,7 @@
                 rightY -= this.pawMoveSpeed;
             else if (rightTarget.y > rightY)
                 rightY += this.pawMoveSpeed;
-            
+
             this.leftPaw.transform.position = new Vector3(
                 leftX,
                 leftY,
@@ -133,11 +160,13 @@
             float leftDistance = Vector3.Distance(leftTarget, this.leftPaw.transform.position);
             float rightDistance = Vector3.Distance(rightTarget, this.rightPaw.transform.position);
 
-            if (leftDistance <= this.pawMoveSpeed
-                || rightDistance <= this.pawMoveSpeed)
+            if (leftDistance <= this.pawMoveSpeed * 1.25f
+                && rightDistance <= this.pawMoveSpeed * 1.25f)
             {
                 this.attacking = false;
                 this.pawResetTimer = this.pawResetDuration;
+                foreach (GameObject strikeZone in this.strikeZones)
+                    strikeZone.SetActive(true);
             }
         }
     }

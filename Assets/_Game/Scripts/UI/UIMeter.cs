@@ -17,11 +17,21 @@
         }
 
 
+        public void UpdateMeter(float percent)
+        {
+            this.image.fillAmount = percent;
+        }
+        
+        
         public void UpdateMeter(ObservableRangeInt observableRangeInt)
         {
-            float totalRange = observableRangeInt.Max - observableRangeInt.Min;
-            float percent = observableRangeInt.Current / totalRange;
-            this.image.fillAmount = percent;
+            this.image.fillAmount = observableRangeInt.GetPercent();
+        }
+        
+        
+        public void UpdateMeter(ObservableRangeFloat observableRangeFloat)
+        {
+            this.image.fillAmount = observableRangeFloat.GetPercent();
         }
     }
 }

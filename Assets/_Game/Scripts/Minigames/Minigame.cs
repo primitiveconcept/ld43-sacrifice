@@ -1,8 +1,10 @@
 ﻿namespace LetsStartAKittyCult.Minigames
 {
     using UnityEngine;
+
+
     public abstract class Minigame<T> : MonoBehaviour
-        where T: MonoBehaviour
+        where T : MonoBehaviour
     {
         private static T _instance;
 
@@ -20,18 +22,21 @@
         #endregion
 
 
-        protected void Show()
-        {
-            GameWorld.Hide();
-            this.gameObject.SetActive(true);
-            
-        }
+        public abstract void Initialize();
 
 
-        protected void Hide()
+        public void Hide()
         {
             this.gameObject.SetActive(false);
             GameWorld.Show();
+        }
+
+
+        public void Show()
+        {
+            Initialize();
+            GameWorld.Hide();
+            this.gameObject.SetActive(true);
         }
     }
 }
