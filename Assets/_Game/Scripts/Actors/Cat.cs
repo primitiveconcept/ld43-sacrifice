@@ -4,8 +4,11 @@
     using UnityEngine;
 
 
-    public class Actor : MonoBehaviour
+    public class Cat : MonoBehaviour
     {
+        [SerializeField]
+        private float blessingCooldown = 1f;
+
         [SerializeField]
         private int equippedItemIndex;
 
@@ -25,6 +28,9 @@
         private Weapon equippedWeapon;
         private UsableItem equippedItem;
         private SpriteSorter spriteSorter;
+
+        private float blessingCooldownTimer;
+        private bool isBlessing;
 
         private float weaponCooldown;
         private float itemCooldown;
@@ -49,6 +55,12 @@
         }
 
 
+        public bool IsBlessing
+        {
+            get { return this.isBlessing; }
+        }
+
+
         public SpriteSorter SpriteSorter
         {
             get { return this.spriteSorter; }
@@ -56,13 +68,23 @@
         #endregion
 
 
+        public void ActivateBlessing(Human human)
+        {
+            if (this.isBlessing)
+                return;
+
+            this.isBlessing = true;
+            this.blessingCooldownTimer = this.blessingCooldown;
+        }
+
+
         public void Awake()
         {
             this.spriteSorter = GetComponent<SpriteSorter>();
             this.inventory = GetComponent<Inventory>();
 
-            EquipWeapon(this.equippedWeaponIndex);
-            EquipItem(this.equippedItemIndex);
+            //EquipWeapon(this.equippedWeaponIndex);
+            //EquipItem(this.equippedItemIndex);
         }
 
 
@@ -194,6 +216,13 @@
 
         public void Update()
         {
+            if (this.blessingCooldownTimer > 0)
+            {
+                this.blessingCooldownTimer -= GameTime.DeltaTime;
+                if (this.blessingCooldownTimer <= 0)
+                    this.isBlessing = false;
+            }
+
             if (this.weaponCooldown > 0)
                 this.weaponCooldown -= GameTime.DeltaTime;
 

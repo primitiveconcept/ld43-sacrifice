@@ -11,7 +11,7 @@
         public const string AutoScroll = "AutoScroll";
 
 
-        public static bool HasTag(GameObject gameObject, string[] tags)
+        public static bool HasTag(this GameObject gameObject, params string[] tags)
         {
             if (tags == null
                 || tags.Length < 1)

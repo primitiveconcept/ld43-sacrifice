@@ -1,6 +1,7 @@
 ﻿namespace LetsStartAKittyCult
 {
     using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
     using UnityEngine;
     using UnityEngine.Events;
 
@@ -18,9 +19,33 @@
         [SerializeField]
         private UnityEvent onLivesDepleted;
 
+
+        private Interactable currentInteractable;
         private UIPlayerHud playerHud;
         private Inventory inventory;
 
+
+        public void SetInteractable(Interactable interactable)
+        {
+            this.currentInteractable = interactable;
+        }
+
+
+        public void Interact(GameObject interactor)
+        {
+            if (this.currentInteractable != null)
+                this.currentInteractable.Interact(interactor);
+        }
+        
+
+        public void UnsetInteractable(Interactable interactable)
+        {
+            if (!this.currentInteractable == interactable)
+                return;
+            
+            this.currentInteractable = null;
+        }
+        
 
         public static int Add(Player player)
         {
@@ -86,16 +111,9 @@
             this.playerHud = FindObjectOfType<UIPlayerHud>();
 
             Health health = GetComponent<Health>();
-            health.OnChanged.AddListener(healthState => this.playerHud.HealthMeter.UpdateMeter(healthState));
+            //health.OnChanged.AddListener(healthState => this.playerHud.HealthMeter.UpdateMeter(healthState));
 
-            this.playerHud.SetupExtraLifeMeter(this.extraLifeItemData);
-
-            OnExtraLivesChanged(this.inventory[this.extraLifeItemData]);
-            this.inventory.OnItemPickup.AddListener(OnInventoryChange);
-            this.inventory.OnItemRemoval.AddListener(OnInventoryChange);
-
-            foreach (ItemEntry item in this.inventory.Items)
-                OnInventoryChange(item);
+            //this.playerHud.SetupExtraLifeMeter(this.extraLifeItemData);
         }
 
 
@@ -125,29 +143,6 @@
         public void OnSelectedItemChanged(ItemEntry itemEntry)
         {
             this.playerHud.ShowSelectedItem(itemEntry);
-        }
-
-
-        private void OnExtraLivesChanged(ItemEntry itemEntry)
-        {
-            this.playerHud.UpdateLives(itemEntry.Count);
-            // TODO: Handle gameover
-        }
-
-
-        private void OnInventoryChange(ItemEntry itemEntry)
-        {
-            if (itemEntry.ItemData == this.scoreItemData)
-                OnScoreChanged(itemEntry);
-
-            else if (itemEntry.ItemData == this.extraLifeItemData)
-                OnExtraLivesChanged(itemEntry);
-        }
-
-
-        private void OnScoreChanged(ItemEntry itemEntry)
-        {
-            this.playerHud.UpdateScore(itemEntry);
         }
     }
 }

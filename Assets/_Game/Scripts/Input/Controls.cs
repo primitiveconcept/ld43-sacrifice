@@ -12,5 +12,6 @@
         public const string PreviousItem = "Previous Item";
         public const string PreviousWeapon = "Previous Weapon";
         public const string ActivatePowerup = "Activate Powerup";
+        public const string Interact = "Interact";
     }
 }

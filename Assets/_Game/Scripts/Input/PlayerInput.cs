@@ -10,7 +10,7 @@
         private bool locked;
 
         private IMovable movement;
-        private Actor actor;
+        private Cat cat;
         
 
         public bool Locked
@@ -23,7 +23,7 @@
         public void Awake()
         {
             this.movement = GetComponent<IMovable>();
-            this.actor = GetComponent<Actor>();
+            this.cat = GetComponent<Cat>();
         
         }
 
@@ -52,13 +52,13 @@
             if (mouseWheelInput > 0
                 || CrossPlatformInputManager.GetButtonDown(Controls.NextItem))
             {
-                this.actor.EquipNextItem();
+                this.cat.EquipNextItem();
             }
 				
             else if (mouseWheelInput < 0
                      || CrossPlatformInputManager.GetButtonDown(Controls.PreviousItem))
             {
-                this.actor.EquipPreviousItem();
+                this.cat.EquipPreviousItem();
             }
 
 
@@ -73,7 +73,13 @@
             {
                 //this.actor.UseEquippedItem();
             }
-                
+
+
+            if (CrossPlatformInputManager.GetButtonUp(Controls.Interact))
+            {
+                Player.Get(0).Interact(this.gameObject);
+            }
+            
 
             if (CrossPlatformInputManager.GetButtonDown(Controls.ActivatePowerup))
             {

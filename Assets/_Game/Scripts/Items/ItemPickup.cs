@@ -59,11 +59,11 @@
 
 		public void OnTriggerEnter2D(Collider2D other)
 		{
-			Actor actor = other.GetComponent<Actor>();
-			if (actor == null)
+			Cat cat = other.GetComponent<Cat>();
+			if (cat == null)
 				return;
 
-			Inventory actorInventory = actor.Inventory;
+			Inventory actorInventory = cat.Inventory;
 			if (actorInventory == null)
 				return;
 
