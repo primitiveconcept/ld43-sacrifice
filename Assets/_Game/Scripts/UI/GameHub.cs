@@ -2,6 +2,7 @@
 {
     using LetsStartAKittyCult.Minigames;
     using UnityEngine;
+    using UnityEngine.Playables;
 
 
     public class GameHub : MonoBehaviour
@@ -26,17 +27,21 @@
         [SerializeField]
         private GameWorld gameWorld;
 
+        [Header("Cutscenes")]
+        [SerializeField]
+        private PlayableDirector sacrificeCutscene;
+
 
         #region Properties
-        public static GameWorld GameWorld
-        {
-            get { return Instance.gameWorld; }
-        }
-        
-        
         public static CaptureMinigame CaptureMinigame
         {
             get { return Instance.captureMinigame; }
+        }
+
+
+        public static GameWorld GameWorld
+        {
+            get { return Instance.gameWorld; }
         }
 
 
@@ -49,6 +54,12 @@
         public static UIPlayerHud PlayerHud
         {
             get { return Instance.playerHud; }
+        }
+
+
+        public static PlayableDirector SacrificeCutscene
+        {
+            get { return Instance.sacrificeCutscene; }
         }
 
 
@@ -88,6 +99,7 @@
             Hide(this.humanStats.gameObject);
             //ShowUI(this.playerHud.gameObject);
             Hide(this.playerHud.gameObject);
+            Hide(this.sacrificeCutscene.gameObject);
             Show(this.gameWorld.gameObject);
         }
     }

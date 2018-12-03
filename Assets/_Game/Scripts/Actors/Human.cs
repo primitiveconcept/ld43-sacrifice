@@ -56,15 +56,15 @@
 
 
         #region Properties
-        public Gender HumanGender
-        {
-            get { return this.humanGender; }
-        }
-
-
         public float CurrentBlessAmount
         {
             get { return this.currentBlessAmount; }
+        }
+
+
+        public Gender HumanGender
+        {
+            get { return this.humanGender; }
         }
 
 
@@ -134,7 +134,7 @@
         {
             this.interactable = GetComponent<Interactable>();
             this.walkAI = GetComponent<WalkAI>();
-            
+
             string adjective = Strings.HumanAdjectives.GetRandom();
             string noun = Strings.HumanNouns.GetRandom();
             this.humanName = $"{adjective} {noun}";
@@ -150,9 +150,7 @@
             float chatterChance = Random.RandomRange(0f, 1f);
             if (chatterChance < this.chattiness
                 && !GameTime.IsPaused)
-            {
                 ShowChatter();
-            }
         }
 
 
@@ -220,6 +218,9 @@
             Player.Get().Cult.SacrificeHuman(this);
             this.interactable.onLeave.Invoke();
             this.gameObject.SetActive(false);
+            GameHub.GameWorld.gameObject.SetActive(false);
+            GameHub.SacrificeCutscene.gameObject.SetActive(true);
+            GameHub.SacrificeCutscene.Play();
         }
 
 
@@ -316,3 +317,29 @@
         }
     }
 }
+
+
+#if UNITY_EDITOR
+namespace LetsStartAKittyCult
+{
+    using UnityEditor;
+    using UnityEngine;
+
+
+    [CustomEditor(typeof(Human))]
+    public class HumanEditor : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+
+            if (Application.isPlaying
+                && GUILayout.Button("SACRIFICE"))
+            {
+                Human human = this.target as Human;
+                human.Sacrifice();
+            }
+        }
+    }
+}
+#endif
