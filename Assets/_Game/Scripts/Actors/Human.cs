@@ -7,20 +7,61 @@
     public class Human : MonoBehaviour
     {
         [SerializeField]
+        private string givenName;
+
+        [SerializeField]
         private float blessingLossRate = 0.01f;
+
+        [SerializeField]
+        private float timeToRecover = 7f;
 
         [SerializeField]
         private int toyIndex = 0;
 
         private Interactable interactable;
         private float currentBlessAmount;
-        private bool incapacitated;
+        private bool isIncapacitated;
+        private bool isHappy;
+        private float recoveryTimer;
 
 
         #region Properties
         public float CurrentBlessAmount
         {
             get { return this.currentBlessAmount; }
+        }
+
+
+        public string GivenName
+        {
+            get { return this.givenName; }
+            set { this.givenName = value; }
+        }
+
+
+        public bool IsHappy
+        {
+            get { return this.isHappy; }
+            set { this.isHappy = value; }
+        }
+
+
+        public bool IsIncapacitated
+        {
+            get { return this.isIncapacitated; }
+            set { this.isIncapacitated = value; }
+        }
+
+
+        public float RecoveryTimer
+        {
+            get { return this.recoveryTimer; }
+        }
+
+
+        public float TimeToRecover
+        {
+            get { return this.timeToRecover; }
         }
 
 
@@ -43,15 +84,32 @@
         }
 
 
-        public void ResetBlessing()
+        public void Adopt(string newName)
         {
-            this.currentBlessAmount = 0;
+            this.givenName = newName;
+            this.isHappy = true;
+            Player.Get().Cult.Members.Add(this);
+        }
+
+
+        public void Awake()
+        {
+            string adjective = Strings.HumanAdjectives.GetRandom();
+            string noun = Strings.HumanNouns.GetRandom();
+            this.givenName = $"{adjective} {noun}";
         }
 
 
         public void HideStats()
         {
             UIHub.HumanStats.Hide(this);
+        }
+
+
+        public void Incapacitate()
+        {
+            this.isIncapacitated = true;
+            this.recoveryTimer = this.timeToRecover;
         }
 
 
@@ -62,6 +120,23 @@
                 return;
 
             cat.ActivateBlessing(this);
+        }
+
+
+        public void ResetBlessing()
+        {
+            this.currentBlessAmount = 0;
+        }
+
+
+        public void Revive()
+        {
+            this.isIncapacitated = false;
+            this.recoveryTimer = 0;
+            this.isHappy = false;
+            this.currentBlessAmount = 0;
+            Health health = GetComponent<Health>();
+            health.SetCurrent(health.Max);
         }
 
 
@@ -85,6 +160,14 @@
                 this.currentBlessAmount -= this.blessingLossRate;
                 if (this.currentBlessAmount < 0)
                     this.currentBlessAmount = 0;
+            }
+
+            if (this.isIncapacitated
+                && this.recoveryTimer > 0)
+            {
+                this.recoveryTimer -= GameTime.DeltaTime;
+                if (this.recoveryTimer <= 0)
+                    Revive();
             }
         }
     }

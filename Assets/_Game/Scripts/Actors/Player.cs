@@ -19,33 +19,21 @@
         [SerializeField]
         private UnityEvent onLivesDepleted;
 
+        [SerializeField]
+        private KittyCult cult;
 
         private Interactable currentInteractable;
         private UIPlayerHud playerHud;
         private Inventory inventory;
 
 
-        public void SetInteractable(Interactable interactable)
+        #region Properties
+        public KittyCult Cult
         {
-            this.currentInteractable = interactable;
+            get { return this.cult; }
         }
+        #endregion
 
-
-        public void Interact(GameObject interactor)
-        {
-            if (this.currentInteractable != null)
-                this.currentInteractable.Interact(interactor);
-        }
-        
-
-        public void UnsetInteractable(Interactable interactable)
-        {
-            if (!this.currentInteractable == interactable)
-                return;
-            
-            this.currentInteractable = null;
-        }
-        
 
         public static int Add(Player player)
         {
@@ -134,6 +122,13 @@
         }
 
 
+        public void Interact(GameObject interactor)
+        {
+            if (this.currentInteractable != null)
+                this.currentInteractable.Interact(interactor);
+        }
+
+
         public void OnDestroy()
         {
             Remove(this);
@@ -143,6 +138,21 @@
         public void OnSelectedItemChanged(ItemEntry itemEntry)
         {
             this.playerHud.ShowSelectedItem(itemEntry);
+        }
+
+
+        public void SetInteractable(Interactable interactable)
+        {
+            this.currentInteractable = interactable;
+        }
+
+
+        public void UnsetInteractable(Interactable interactable)
+        {
+            if (!this.currentInteractable == interactable)
+                return;
+
+            this.currentInteractable = null;
         }
     }
 }

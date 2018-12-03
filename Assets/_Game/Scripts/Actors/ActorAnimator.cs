@@ -6,6 +6,10 @@
     public partial class ActorAnimator : MonoBehaviour
     {
         public const string IsBlessing = "IsBlessing";
+
+        public const string IsHappy = "IsHappy";
+        public const string IsIncapacitated = "IsIncapacitated";
+
         public const string HorizontalVelocity = "HorizontalVelocity";
         public const string HorizontalSpeed = "HorizontalSpeed";
         public const string VerticalSpeed = "VerticalSpeed";
@@ -15,14 +19,29 @@
 
         private SpriteSorter spriteSorter;
         private Cat cat;
+        private Human human;
 
 
-        
+        #region Properties
+        private Animator Animator
+        {
+            get { return this.spriteSorter.Animator; }
+        }
+
+
+        private SpriteRenderer SpriteRenderer
+        {
+            get { return this.spriteSorter.SpriteRenderer; }
+        }
+        #endregion
+
+
         public void Awake()
         {
             this.movable = GetComponent<IMovable>();
             this.spriteSorter = GetComponent<SpriteSorter>();
             this.cat = GetComponent<Cat>();
+            this.human = GetComponent<Human>();
             this.movable.StartedMoving += Movable_OnStartedMoving;
             this.movable.StoppedMoving += Movable_OnStartedMovingOnStoppedMoving;
         }
@@ -30,36 +49,55 @@
 
         public void Update()
         {
-            this.spriteSorter.Animator.SetFloat(HorizontalSpeed, this.movable.CurrentSpeed.x);
-            this.spriteSorter.Animator.SetFloat(HorizontalVelocity, this.movable.CurrentVelocity.x);
-            this.spriteSorter.Animator.SetFloat(VerticalSpeed, this.movable.CurrentSpeed.y);
-            this.spriteSorter.Animator.SetFloat(VerticalVelocity, this.movable.CurrentVelocity.y);
+            // Movement
+            UpdateMovementParameters();
 
+            // Cat
             if (this.cat != null)
-            {
-                this.spriteSorter.Animator.SetBool(IsBlessing, this.cat.IsBlessing);
-            }
+                UpdateCatParameters();
 
-            if (this.movable.CurrentVelocity.x < 0)
-            {
-                this.spriteSorter.SpriteRenderer.flipX = true;
-            }
-            else if (this.movable.CurrentVelocity.x > 0)
-            {
-                this.spriteSorter.SpriteRenderer.flipX = false;
-            }
+            // Human
+            if (this.human != null)
+                UpdateHumanParameters();
         }
 
 
         private void Movable_OnStartedMoving()
         {
-            Debug.Log("Started moving");
+            // TODO
         }
 
 
         private void Movable_OnStartedMovingOnStoppedMoving()
         {
-            Debug.Log("Stopped moving");
+            // TODO
+        }
+
+
+        private void UpdateCatParameters()
+        {
+            this.Animator.SetBool(IsBlessing, this.cat.IsBlessing);
+        }
+
+
+        private void UpdateHumanParameters()
+        {
+            this.Animator.SetBool(IsHappy, this.human.IsHappy);
+            this.Animator.SetBool(IsIncapacitated, this.human.IsIncapacitated);
+        }
+
+
+        private void UpdateMovementParameters()
+        {
+            this.Animator.SetFloat(HorizontalSpeed, this.movable.CurrentSpeed.x);
+            this.Animator.SetFloat(HorizontalVelocity, this.movable.CurrentVelocity.x);
+            this.Animator.SetFloat(VerticalSpeed, this.movable.CurrentSpeed.y);
+            this.Animator.SetFloat(VerticalVelocity, this.movable.CurrentVelocity.y);
+
+            if (this.movable.CurrentVelocity.x < 0)
+                this.SpriteRenderer.flipX = true;
+            else if (this.movable.CurrentVelocity.x > 0)
+                this.SpriteRenderer.flipX = false;
         }
     }
 }
@@ -85,18 +123,40 @@ namespace LetsStartAKittyCult
                 if (GUILayout.Button("Populate Animation Parameters"))
                 {
                     ActorAnimator actorAnimator = this.target as ActorAnimator;
-                    AnimatorController controller = (AnimatorController)(actorAnimator.GetComponent<Animator>().runtimeAnimatorController);
+                    AnimatorController controller =
+                        (AnimatorController)actorAnimator.GetComponent<Animator>().runtimeAnimatorController;
+
+                    // Movement
                     AddFloatParameter(controller, HorizontalSpeed);
                     AddFloatParameter(controller, HorizontalVelocity);
                     AddFloatParameter(controller, VerticalSpeed);
                     AddFloatParameter(controller, VerticalVelocity);
 
+                    // Cat
                     Cat cat = actorAnimator.GetComponent<Cat>();
                     if (cat != null)
-                    {
                         AddBoolParameter(controller, IsBlessing);
+
+                    // Human
+                    Human human = actorAnimator.GetComponent<Human>();
+                    if (human != null)
+                    {
+                        AddBoolParameter(controller, IsHappy);
+                        AddBoolParameter(controller, IsIncapacitated);
                     }
                 }
+            }
+
+
+            private void AddBoolParameter(AnimatorController controller, string parameterName)
+            {
+                if (HasParameter(controller, parameterName))
+                    return;
+
+                AnimatorControllerParameter parameter = new AnimatorControllerParameter();
+                parameter.type = AnimatorControllerParameterType.Bool;
+                parameter.name = parameterName;
+                controller.AddParameter(parameter);
             }
 
 
@@ -107,18 +167,6 @@ namespace LetsStartAKittyCult
 
                 AnimatorControllerParameter parameter = new AnimatorControllerParameter();
                 parameter.type = AnimatorControllerParameterType.Float;
-                parameter.name = parameterName;
-                controller.AddParameter(parameter);
-            }
-            
-            
-            private void AddBoolParameter(AnimatorController controller, string parameterName)
-            {
-                if (HasParameter(controller, parameterName))
-                    return;
-
-                AnimatorControllerParameter parameter = new AnimatorControllerParameter();
-                parameter.type = AnimatorControllerParameterType.Bool;
                 parameter.name = parameterName;
                 controller.AddParameter(parameter);
             }

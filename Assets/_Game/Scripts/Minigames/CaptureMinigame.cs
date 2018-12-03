@@ -1,9 +1,12 @@
 ﻿namespace LetsStartAKittyCult.Minigames
 {
     using System;
+    using System.ComponentModel;
+    using System.Runtime.CompilerServices;
     using TMPro;
     using UnityEngine;
     using UnityEngine.Events;
+    using UnityEngine.UI;
     using UnityStandardAssets.CrossPlatformInput;
 
 
@@ -20,10 +23,19 @@
         private GameObject mainTextPanel;
 
         [SerializeField]
+        private GameObject winPanel;
+
+        [SerializeField]
         private UIMeter timeLimitMeter;
 
         [SerializeField]
         private CapturePaws paws;
+
+        [SerializeField]
+        private TMP_InputField humanNameInput;
+
+        [SerializeField]
+        private Button humanNameInputButton;
 
         [Header("Events")]
         [SerializeField]
@@ -54,22 +66,32 @@
         #endregion
 
 
+        public static void IncrementScore()
+        {
+            Instance.currentScore++;
+
+            if (Instance.currentScore != Instance.targetScore)
+                return;
+
+            Instance.Win();
+        }
+
+
+        public void Win()
+        {
+            Debug.Log("WON CAPTURE MINIGAME, YAY!!!");
+            this.humanNameInput.text = "";
+            this.humanNameInputButton.interactable = false;
+            this.winPanel.SetActive(true);
+            this.hasStarted = false;
+            this.onWin.Invoke();
+        }
+        
+        
         public void Begin()
         {
             this.hasStarted = true;
             HideMainText();
-        }
-
-
-        public void IncrementScore()
-        {
-            this.currentScore++;
-
-            if (this.currentScore != this.targetScore)
-                return;
-
-            Debug.Log("WON CAPTURE MINIGAME, YAY!!!");
-            this.onWin.Invoke();
         }
 
 
@@ -78,6 +100,7 @@
             this.hasStarted = false;
             this.currentScore = 0;
             this.timeLimitTimer = this.timeLimit;
+            this.winPanel.SetActive(false);
         }
 
 
@@ -86,6 +109,25 @@
             this.hasStarted = false;
             this.targetHuman.ResetBlessing();
             this.onLose.Invoke();
+        }
+
+
+        public void CheckName()
+        {
+            if (string.IsNullOrEmpty(this.humanNameInput.text))
+                this.humanNameInputButton.interactable = false;
+            else
+                this.humanNameInputButton.interactable = true;
+        }
+        
+        
+        public void Reward()
+        {
+            if (string.IsNullOrEmpty(this.humanNameInput.text))
+                return;
+            
+            this.targetHuman.Adopt(this.humanNameInput.text);
+            Hide();
         }
 
 
@@ -102,9 +144,7 @@
             this.targetScore = toy.TargetScore;
             toy.gameObject.SetActive(true);
 
-            string adjective = Strings.HumanAdjectives.GetRandom();
-            string noun = Strings.HumanNouns.GetRandom();
-            string introText = $"{adjective} {noun} wants to play with the {toy.ToyName}";
+            string introText = $"{human.GivenName} wants to play with the {toy.ToyName}";
             ShowMainText(introText);
         }
 
