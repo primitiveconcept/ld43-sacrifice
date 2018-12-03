@@ -1,12 +1,16 @@
 ﻿namespace LetsStartAKittyCult
 {
     using System.Collections;
+    using System.Runtime.InteropServices.WindowsRuntime;
     using UnityEngine;
     using UnityEngine.Events;
 
 
     public class Health : ObservableRangeInt
     {
+        [SerializeField]
+        private int lives = 9;
+
         [SerializeField]
         private float flickerInterval = 0.05f;
 
@@ -25,6 +29,9 @@
         [SerializeField]
         private UnityEvent onDepleted;
 
+        [SerializeField]
+        private IntegerEvent onLastLifeLost;
+
         private bool isInvulnerable;
         private int originalHealth;
 
@@ -36,6 +43,12 @@
         }
 
 
+        public int Lives
+        {
+            get { return this.lives; }
+        }
+
+
         public UnityEvent OnDepleted
         {
             get { return this.onDepleted; }
@@ -43,13 +56,39 @@
         #endregion
 
 
-        // TODO: Might want to pass duration value, for invulnerability powerups
+        public void ConsumeLife()
+        {
+            if (this.lives == 0)
+            {
+                return;
+            }
+            else if (this.lives < 0)
+            {
+                this.onDepleted.Invoke();
+                return;
+            }
+
+            this.lives--;
+
+            if (this.lives == 0)
+                this.onLastLifeLost.Invoke(this.lives);
+            else
+                this.onDepleted.Invoke();
+        }
+
+
+        public void EnableTemporaryInvulnerability(float duration)
+        {
+            StartCoroutine(InvulnerabilityCoroutine(duration));
+        }
+
+
         public void EnableTemporaryInvulnerability()
         {
             if (this.invulnerabilityDuration <= 0)
                 return;
 
-            StartCoroutine(InvulnerabilityCoroutine());
+            StartCoroutine(InvulnerabilityCoroutine(this.invulnerabilityDuration));
         }
 
 
@@ -69,7 +108,7 @@
             base.Reduce(amount, forceEvent);
 
             if (this.Current == this.Min)
-                this.onDepleted.Invoke();
+                ConsumeLife();
             else if (this.invulnerabilityDuration > 0)
                 EnableTemporaryInvulnerability();
         }
@@ -84,7 +123,7 @@
         }
 
 
-        private IEnumerator InvulnerabilityCoroutine()
+        private IEnumerator InvulnerabilityCoroutine(float duration)
         {
             this.isInvulnerable = true;
             float invulnerabilityCounter = 0;
@@ -92,7 +131,7 @@
 
             SpriteRenderer spriteRenderer = GetComponentInChildren<SpriteRenderer>();
             Color originalColor = spriteRenderer.color;
-            while (invulnerabilityCounter < this.invulnerabilityDuration)
+            while (invulnerabilityCounter < duration)
             {
                 spriteRenderer.color = spriteRenderer.color == originalColor
                                            ? this.invulnerabilityFlickerColor
@@ -106,3 +145,28 @@
         }
     }
 }
+
+#if UNITY_EDITOR
+namespace LetsStartAKittyCult
+{
+    using UnityEditor;
+    using UnityEngine;
+
+
+    [CustomEditor(typeof(Health))]
+    public class HealthEditor : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+            
+            if (Application.isPlaying
+                && GUILayout.Button("KILL INSTANTLY"))
+            {
+                Health health = this.target as Health;
+                health.Reduce(health.Max);
+            }
+        }
+    }
+}
+#endif

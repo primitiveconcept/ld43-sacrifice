@@ -49,7 +49,8 @@
                     "my cat have asterik butt, ha ha!",
                     "Ph'nglui mglw'nafh Cathulhu Cheez'burger wgah'nagl fhtagn",
                     "i shuld let mah kid play wif cat",
-                    "cats clean, no need clean litter"
+                    "cats clean, no need clean litter",
+                    "here kitty kitty, durrr"
                 };
 
 

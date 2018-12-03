@@ -32,6 +32,7 @@
             nestedSpriteRenderer.sortingLayerName = spriteRenderer.sortingLayerName;
             nestedSpriteRenderer.sortingOrder = spriteRenderer.sortingOrder;
             nestedSpriteRenderer.maskInteraction = spriteRenderer.maskInteraction;
+            nestedSpriteRenderer.size = spriteRenderer.size;
             GameObject.Destroy(spriteRenderer);
 
             gameObject.SpriteRenderer = nestedSpriteRenderer;

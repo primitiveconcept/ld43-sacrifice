@@ -15,40 +15,70 @@
         private string captionText;
 
         [SerializeField]
-        private InteractableEvent onInteract;
+        public InteractableEvent onInteract;
 
         [SerializeField]
-        private UnityEvent onApproach;
+        public UnityEvent onApproach;
 
         [SerializeField]
-        private UnityEvent onLeave;
+        public UnityEvent onLeave;
 
+        private bool canInteract;
+
+
+        #region Properties
+        public string CaptionText
+        {
+            get { return this.captionText; }
+            set { this.captionText = value; }
+        }
+
+
+        public bool CanInteract
+        {
+            get { return this.canInteract; }
+        }
+
+
+        public TextMeshPro CaptionField
+        {
+            get { return this.captionField; }
+        }
+        #endregion
+
+
+        public void Awake()
+        {
+            HideCaption();
+        }
+        
 
         public void AllowInteraction(GameObject other)
         {
             Player.Get(0).SetInteractable(this);
-
-            if (this.captionField == null)
-                return;
-
-            if (string.IsNullOrEmpty(this.captionText))
-                return;
-
-            this.captionField.text = this.captionText;
-            this.captionField.gameObject.SetActive(true);
+            this.canInteract = true;
             this.onApproach.Invoke();
+
+            ShowCaption(this.captionText, Color.yellow);
         }
 
 
         public void DisallowInteraction(GameObject other)
         {
             Player.Get(0).UnsetInteractable(this);
+            this.canInteract = false;
+            this.onLeave.Invoke();
 
+            HideCaption();
+        }
+
+
+        public void HideCaption()
+        {
             if (this.captionField == null)
                 return;
 
             this.captionField.gameObject.SetActive(false);
-            this.onLeave.Invoke();
         }
 
 
@@ -56,6 +86,27 @@
         {
             Debug.Log("Interacted with: " + this.gameObject.name);
             this.onInteract.Invoke(other);
+        }
+
+
+        public void ShowCaption(string text, Color color)
+        {
+            ShowCaption(text);
+            this.captionField.color = color;
+        }
+        
+        
+        public void ShowCaption(string text)
+        {
+            if (text == null)
+                return;
+
+            if (string.IsNullOrEmpty(text))
+                return;
+
+            this.captionField.color = Color.white;
+            this.captionField.text = text;
+            this.captionField.gameObject.SetActive(true);
         }
 
 

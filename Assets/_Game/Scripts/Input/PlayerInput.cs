@@ -52,26 +52,25 @@
             if (mouseWheelInput > 0
                 || CrossPlatformInputManager.GetButtonDown(Controls.NextItem))
             {
-                this.cat.EquipNextItem();
+                // TODO
             }
 				
             else if (mouseWheelInput < 0
                      || CrossPlatformInputManager.GetButtonDown(Controls.PreviousItem))
             {
-                this.cat.EquipPreviousItem();
+                // TODO
             }
 
 
             if (CrossPlatformInputManager.GetButtonDown(Controls.Primary))
             {
                 this.GetComponent<Pounce>().Activate();
-                //this.actor.UseEquippedWeapon();
             }
                 
 
             if (CrossPlatformInputManager.GetButtonDown(Controls.Secondary))
             {
-                //this.actor.UseEquippedItem();
+                // TODO
             }
 
 

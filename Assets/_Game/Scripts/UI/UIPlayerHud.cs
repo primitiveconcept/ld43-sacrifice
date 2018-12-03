@@ -1,97 +1,50 @@
 ﻿namespace LetsStartAKittyCult
 {
+	using TMPro;
 	using UnityEngine;
-	using UnityEngine.Serialization;
-	using UnityEngine.UI;
-
+	
 
 	public class UIPlayerHud : MonoBehaviour
 	{
 		[SerializeField]
-		private UIMeter affectionMeter;
-
-		[Header("Score")]
-		[SerializeField]
-		private Text scoreText;
-
-		[Header("Selected Item")]
-		[SerializeField]
-		private Image selectedItemIcon;
-
-		[SerializeField]
-		private Text selectedItemCount;
-
-		[Header("Lives")]
-		[SerializeField]
-		[FormerlySerializedAs("livesMeter")]
-		private RectTransform extraLifeMeter;
+		private TextMeshProUGUI gloryLabel;
 		
-		
-		public UIMeter AffectionMeter
-		{
-			get { return this.affectionMeter; }
-		}
+		[SerializeField]
+		private TextMeshProUGUI daysLeftLabel;
+
+		[SerializeField]
+		private TextMeshProUGUI livesLeftLabel;
 
 
-		public Text ScoreText
+		public void Start()
 		{
-			get { return this.scoreText; }
+			Player player = Player.Get();
+			
+			Health playerHealth = player.GetComponent<Health>();
+			
+			playerHealth.OnDepleted.AddListener(() => UpdateLives(playerHealth.Lives));
+			player.Cult.OnDayEnded.AddListener(UpdateDaysLeft);
+			player.Cult.OnHumanSacrificed.AddListener(UpdateGlory);
+			
+			UpdateLives(playerHealth.Lives);
+			UpdateDaysLeft(player.Cult.CatDaysLeft);
+			UpdateGlory(player.Cult.Glory);
 		}
 		
 
+		public void UpdateGlory(int value)
+		{
+			this.gloryLabel.text = $"GLORY: {value} / 9";
+		}
+		
 		public void UpdateLives(int value)
 		{
-			int maxLives = this.extraLifeMeter.childCount;
-
-			for (int i = maxLives; i > 0; i--)
-			{
-				var lifeIcon = this.extraLifeMeter.GetChild(i - 1);
-				if (i > value)
-					lifeIcon.gameObject.SetActive(false);
-				else
-					lifeIcon.gameObject.SetActive(true);
-			}
+			this.livesLeftLabel.text = $"LIVES: {value}";
 		}
 		
-
-		public void ShowSelectedItem(ItemEntry itemEntry)
+		public void UpdateDaysLeft(int value)
 		{
-			this.selectedItemIcon.sprite = itemEntry.ItemData.Icon;
-			this.selectedItemCount.text = itemEntry.ItemData.IsConsumed
-				? itemEntry.Count.ToString()
-				: "";
+			this.daysLeftLabel.text = $"CAT DAYS LEFT: {value}";
 		}
-
-
-		public void UpdateScore(ItemEntry scoreItemEntry)
-		{
-			this.scoreText.text = scoreItemEntry.Count.ToString("D4") 
-				+ " / " 
-				+ scoreItemEntry.ItemData.MaxCount;
-		}
-
-
-		public void SetupExtraLifeMeter(ItemData extraLifeItemData)
-		{
-			foreach (RectTransform rectTransform in this.extraLifeMeter)
-			{
-				Destroy(rectTransform.gameObject);
-			}
-
-			GridLayoutGroup gridLayout = this.extraLifeMeter.GetComponent<GridLayoutGroup>();
-
-			for (int i = 0; i < extraLifeItemData.MaxCount; i++)
-			{
-				GameObject imageObject = new GameObject("Extra Life " + (i + 1));
-				imageObject.transform.SetParent(this.extraLifeMeter.transform);
-				imageObject.transform.localScale = Vector3.one;
-
-				Image extraLifeImage = imageObject.AddComponent<Image>();
-				extraLifeImage.sprite = extraLifeItemData.Icon;
-				
-				extraLifeImage.preserveAspect = true;
-			}
-		}
-		
 	}
 }

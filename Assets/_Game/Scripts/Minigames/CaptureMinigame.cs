@@ -144,7 +144,7 @@
             this.targetScore = toy.TargetScore;
             toy.gameObject.SetActive(true);
 
-            string introText = $"{human.GivenName} wants to play with the {toy.ToyName}";
+            string introText = $"{human.HumanName} wants to play with the {toy.ToyName}";
             ShowMainText(introText);
         }
 

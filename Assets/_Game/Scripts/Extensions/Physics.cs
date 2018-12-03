@@ -18,7 +18,7 @@
             {
                 rigidbody2D.gravityScale = 0;
                 rigidbody2D.isKinematic = false;
-                rigidbody2D.mass = 1;
+                rigidbody2D.mass = 5;
                 rigidbody2D.angularDrag = 0;
                 rigidbody2D.constraints = RigidbodyConstraints2D.FreezeRotation;
             }

@@ -156,6 +156,12 @@
         }
 
 
+        public virtual void SetToMax()
+        {
+            SetCurrent(this.max);
+        }
+
+
         public virtual void Start()
         {
             if (this.setToMaxOnStart)
