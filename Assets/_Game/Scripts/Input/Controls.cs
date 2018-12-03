@@ -13,5 +13,6 @@
         public const string PreviousWeapon = "Previous Weapon";
         public const string ActivatePowerup = "Activate Powerup";
         public const string Interact = "Interact";
+        public const string Cancel = "Cancel";
     }
 }

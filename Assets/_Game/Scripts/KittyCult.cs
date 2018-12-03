@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using UnityEngine;
     using UnityEngine.Events;
 
 
@@ -11,7 +12,7 @@
         public string WorshippedGod;
         public List<Human> Members = new List<Human>();
         public List<Human> HumansSacrificed = new List<Human>();
-        public float EndGameTimer = 10 * 60 * 1000;
+        public float EndGameTimer = 10 * 60;
         
         private int currentDay = 10;
         
@@ -24,7 +25,7 @@
         #region Properties
         public int CatDaysLeft
         {
-            get { return (int)(this.EndGameTimer / (60 * 1000) + 1); }
+            get { return Mathf.CeilToInt(this.EndGameTimer / 60); }
         }
 
 
@@ -35,11 +36,11 @@
         #endregion
 
 
-        public void DecreaseTime()
+        public void DecreaseTime(float amount)
         {
-            this.EndGameTimer -= GameTime.DeltaTime;
+            this.EndGameTimer -= amount;
 
-            if (CatDaysLeft < this.currentDay)
+            if (this.CatDaysLeft < this.currentDay)
             {
                 this.currentDay--;
                 this.OnDayEnded.Invoke(this.currentDay);

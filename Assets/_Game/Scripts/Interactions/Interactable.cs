@@ -18,6 +18,9 @@
         public InteractableEvent onInteract;
 
         [SerializeField]
+        public InteractableEvent onCancelInteract;
+        
+        [SerializeField]
         public UnityEvent onApproach;
 
         [SerializeField]
@@ -86,6 +89,13 @@
         {
             Debug.Log("Interacted with: " + this.gameObject.name);
             this.onInteract.Invoke(other);
+        }
+
+
+        public void CancelInteract(GameObject other)
+        {
+            Debug.Log("Cancel interaction with: " + this.gameObject.name);
+            this.onCancelInteract.Invoke(other);
         }
 
 

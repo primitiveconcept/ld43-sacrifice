@@ -45,9 +45,11 @@ GameObject:
   - component: {fileID: 61651901988291406}
   - component: {fileID: 114232821805826768}
   - component: {fileID: 114099319474300786}
+  - component: {fileID: 114987863459766376}
+  - component: {fileID: 114701367399678862}
   m_Layer: 0
   m_Name: cat
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -59,7 +61,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1424574460885696}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.02, y: 0.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4395619696385874}
@@ -205,6 +207,53 @@ MonoBehaviour:
   moveDirection: {x: 0, y: 0}
   additionalVelocity: {x: 0, y: 0}
   autoMove: 0
+--- !u!114 &114701367399678862
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1424574460885696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed33341418814c43b1eed30faecca9bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  current: 0
+  min: 0
+  max: 100
+  setToMaxOnStart: 1
+  onChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: LetsStartAKittyCult.ObservableRangeInt+ChangedEvent, Assembly-CSharp,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  lives: 9
+  flickerInterval: 0.05
+  damageFlickerColor: {r: 1, g: 0, b: 0, a: 1}
+  invulnerabilityFlickerColor: {r: 0, g: 0, b: 0, a: 0}
+  invulnerabilityDuration: 2
+  invulerableOnSpawn: 0
+  onDepleted:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114946040347327274}
+        m_MethodName: Respawn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  onLastLifeLost:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: LetsStartAKittyCult.IntegerEvent, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114878855389938386
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -216,7 +265,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bac8854d9b2c4c408510a0d37cb4ac8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  locked: 0
+  isLocked: 0
+  isMovementLocked: 0
 --- !u!114 &114914716992714166
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -239,17 +289,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25353d2d4b2644128adc8cc43b3bb366, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  respawnTime: 5
+  respawnTarget: {fileID: 0}
   blessAmount: 0.35
-  blessingCooldown: 1
-  equippedItemIndex: 0
-  equippedWeaponIndex: 0
-  attackOrigin: {fileID: 0}
-  useItemOrigin: {fileID: 0}
-  onSelectedItemChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: LetsStartAKittyCult.Inventory+ItemEntryEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
+  blessingCooldown: 0.9
+--- !u!114 &114987863459766376
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1424574460885696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4065065077849508446332d049f2476, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cult:
+    WorshippedGod: 
+    Members: []
+    HumansSacrificed: []
+    EndGameTimer: 600
+    OnTimeUp:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    OnDayEnded:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: LetsStartAKittyCult.IntegerEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    OnCultMemberAdded:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: LetsStartAKittyCult.IntegerEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    OnHumanSacrificed:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: LetsStartAKittyCult.IntegerEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!212 &212858359574963482
 SpriteRenderer:
   m_ObjectHideFlags: 1

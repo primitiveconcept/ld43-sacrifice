@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using UnityEngine;
-    
 
 
     public class Player : MonoBehaviour
@@ -71,6 +70,13 @@
         }
 
 
+        public void CancelInteract(GameObject interactor)
+        {
+            if (this.currentInteractable != null)
+                this.currentInteractable.CancelInteract(interactor);
+        }
+
+
         public void Interact(GameObject interactor)
         {
             if (this.currentInteractable != null)
@@ -96,6 +102,12 @@
                 return;
 
             this.currentInteractable = null;
+        }
+
+
+        public void Update()
+        {
+            this.cult.DecreaseTime(GameTime.DeltaTime);
         }
     }
 }

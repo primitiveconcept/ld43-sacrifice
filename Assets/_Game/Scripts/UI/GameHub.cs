@@ -87,6 +87,7 @@
             //ShowUI(this.startScreen.gameObject);
             Hide(this.humanStats.gameObject);
             //ShowUI(this.playerHud.gameObject);
+            Hide(this.playerHud.gameObject);
             Show(this.gameWorld.gameObject);
         }
     }
