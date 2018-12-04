@@ -49,6 +49,7 @@
         private int targetScore;
         private int currentScore;
         private Human targetHuman;
+        private Vector3 previousCameraPosition;
 
 
         #region Properties
@@ -77,17 +78,6 @@
         }
 
 
-        public void Win()
-        {
-            Debug.Log("WON CAPTURE MINIGAME, YAY!!!");
-            this.humanNameInput.text = "";
-            this.humanNameInputButton.interactable = false;
-            this.winPanel.SetActive(true);
-            this.hasStarted = false;
-            this.onWin.Invoke();
-        }
-        
-        
         public void Begin()
         {
             this.hasStarted = true;
@@ -95,8 +85,23 @@
         }
 
 
+        public void CheckName()
+        {
+            if (string.IsNullOrEmpty(this.humanNameInput.text))
+                this.humanNameInputButton.interactable = false;
+            else
+                this.humanNameInputButton.interactable = true;
+        }
+
+
         public override void Initialize()
         {
+            this.previousCameraPosition = Camera.main.transform.position;
+            Camera.main.transform.position = new Vector3(
+                0,
+                0,
+                Camera.main.transform.position.z);
+
             this.hasStarted = false;
             this.currentScore = 0;
             this.timeLimitTimer = this.timeLimit;
@@ -112,20 +117,17 @@
         }
 
 
-        public void CheckName()
+        public void OnDisable()
         {
-            if (string.IsNullOrEmpty(this.humanNameInput.text))
-                this.humanNameInputButton.interactable = false;
-            else
-                this.humanNameInputButton.interactable = true;
+            Camera.main.transform.position = this.previousCameraPosition;
         }
-        
-        
+
+
         public void Reward()
         {
             if (string.IsNullOrEmpty(this.humanNameInput.text))
                 return;
-            
+
             this.targetHuman.Adopt(this.humanNameInput.text);
             Hide();
         }
@@ -174,6 +176,17 @@
                 mousePosition.z = 0;
                 this.paws.Attack(mousePosition);
             }
+        }
+
+
+        public void Win()
+        {
+            Debug.Log("WON CAPTURE MINIGAME, YAY!!!");
+            this.humanNameInput.text = "";
+            this.humanNameInputButton.interactable = false;
+            this.winPanel.SetActive(true);
+            this.hasStarted = false;
+            this.onWin.Invoke();
         }
 
 

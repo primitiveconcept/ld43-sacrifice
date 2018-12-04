@@ -9,6 +9,9 @@
         private static List<Player> players = new List<Player>();
 
         [SerializeField]
+        private Transform playerStart;
+
+        [SerializeField]
         private KittyCult cult;
 
         private Interactable currentInteractable;
@@ -67,6 +70,15 @@
         {
             Add(this);
             AttachToPlayerHud();
+
+            if (this.playerStart != null)
+            {
+                this.transform.position = this.playerStart.position;
+                Camera.main.transform.position = new Vector3(
+                    this.playerStart.position.x,
+                    this.playerStart.position.y,
+                    Camera.main.transform.position.z);
+            }
         }
 
 

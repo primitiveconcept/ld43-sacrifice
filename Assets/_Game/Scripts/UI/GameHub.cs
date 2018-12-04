@@ -3,6 +3,7 @@
     using LetsStartAKittyCult.Minigames;
     using UnityEngine;
     using UnityEngine.Playables;
+    using UnityEngine.SceneManagement;
 
 
     public class GameHub : MonoBehaviour
@@ -10,16 +11,7 @@
         private static GameHub _instance;
 
         [SerializeField]
-        private Transform playerStart;
-        
-        [SerializeField]
         private UIPlayerHud playerHud;
-
-        [SerializeField]
-        private GameObject startScreen;
-
-        [SerializeField]
-        private GameObject endScreen;
 
         [SerializeField]
         private CaptureMinigame captureMinigame;
@@ -32,10 +24,22 @@
 
         [Header("Cutscenes")]
         [SerializeField]
+        private PlayableDirector introCutscene;
+        
+        [SerializeField]
         private PlayableDirector sacrificeCutscene;
+
+        [SerializeField]
+        private PlayableDirector endCutscene;
 
 
         #region Properties
+        public static PlayableDirector IntroCutscene
+        {
+            get { return Instance.introCutscene; }
+        }
+
+
         public static CaptureMinigame CaptureMinigame
         {
             get { return Instance.captureMinigame; }
@@ -63,6 +67,12 @@
         public static PlayableDirector SacrificeCutscene
         {
             get { return Instance.sacrificeCutscene; }
+        }
+
+
+        public static PlayableDirector EndCutscene
+        {
+            get { return Instance.endCutscene; }
         }
 
 
@@ -102,18 +112,51 @@
             Hide(this.humanStats.gameObject);
             //ShowUI(this.playerHud.gameObject);
             Hide(this.playerHud.gameObject);
+            
             Hide(this.sacrificeCutscene.gameObject);
-            Show(this.gameWorld.gameObject);
+            Hide(this.endCutscene.gameObject);
+            
+            PlayCutscene(this.introCutscene);       
+        }
+        
 
-            if (this.playerStart != null)
-            {
-                Player.Get().transform.position = this.playerStart.position;
-                Camera.main.transform.position = new Vector3(
-                    this.playerStart.position.x,
-                    this.playerStart.position.y,
-                    Camera.main.transform.position.z);
-            }
-                
+        public void Restart()
+        {
+            SceneManager.LoadScene(0);
+        }
+
+
+        public static void PlayCutscene(PlayableDirector cutscene)
+        {
+            GameWorld.gameObject.SetActive(false);
+            cutscene.gameObject.SetActive(true);
+            cutscene.Play();
         }
     }
 }
+
+
+#if UNITY_EDITOR
+namespace LetsStartAKittyCult
+{
+    using UnityEditor;
+    using UnityEngine;
+
+
+    [CustomEditor(typeof(GameHub))]
+    public class GameHubEditor : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+
+            if (Application.isPlaying
+                && GUILayout.Button("WIN GAME"))
+            {
+                GameHub.PlayCutscene(GameHub.EndCutscene);
+            }
+        }
+    }
+
+}
+#endif

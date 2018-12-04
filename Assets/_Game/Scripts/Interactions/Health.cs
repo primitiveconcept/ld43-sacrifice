@@ -46,6 +46,7 @@
         public int Lives
         {
             get { return this.lives; }
+            set { this.lives = value; }
         }
 
 

@@ -6,6 +6,9 @@
     public class WalkAI : MonoBehaviour
     {
         [SerializeField]
+        private bool followPlayer = false;
+
+        [SerializeField]
         private float minimumFollowDistance = 0.6f;
 
         [SerializeField]
@@ -16,7 +19,6 @@
 
         private WalkDirection currentWalkDirection;
         private IMovable movable;
-        private bool followPlayer = false;
         private bool isLocked;
 
 
@@ -35,6 +37,13 @@
         {
             get { return this.currentWalkDirection; }
             set { this.currentWalkDirection = value; }
+        }
+
+
+        public bool FollowPlayer
+        {
+            get { return this.followPlayer; }
+            set { this.followPlayer = value; }
         }
         #endregion
 
@@ -86,7 +95,7 @@
                     break;
             }
 
-            if (this.currentWalkDirection != WalkDirection.Idle)
+            //if (this.currentWalkDirection != WalkDirection.Idle)
                 this.movable.Move();
         }
 
@@ -115,7 +124,7 @@
             }
 
             Vector2 distances = Player.Get().transform.position - this.transform.position;
-            if (Mathf.Abs(distances.x) < Mathf.Abs(distances.y))
+            if (Mathf.Abs(distances.x) > Mathf.Abs(distances.y))
             {
                 if (distances.x < 0)
                     this.currentWalkDirection = WalkDirection.Left;

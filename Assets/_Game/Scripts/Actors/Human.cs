@@ -1,6 +1,5 @@
 ﻿namespace LetsStartAKittyCult
 {
-    using LetsStartAKittyCult.Minigames;
     using UnityEngine;
 
 
@@ -125,6 +124,7 @@
             this.humanName = newName;
             this.isHappy = true;
             Player.Get().Cult.AddCultMember(this);
+            this.walkAI.FollowPlayer = true;
 
             SetInteraction(InteractionSetting.None);
         }
@@ -207,6 +207,7 @@
             this.currentBlessAmount = 0;
             Health health = GetComponent<Health>();
             health.SetCurrent(health.Max);
+            this.walkAI.FollowPlayer = false;
             this.walkAI.Unlock();
 
             SetInteraction(InteractionSetting.Bless);
@@ -218,9 +219,7 @@
             Player.Get().Cult.SacrificeHuman(this);
             this.interactable.onLeave.Invoke();
             this.gameObject.SetActive(false);
-            GameHub.GameWorld.gameObject.SetActive(false);
-            GameHub.SacrificeCutscene.gameObject.SetActive(true);
-            GameHub.SacrificeCutscene.Play();
+            GameHub.PlayCutscene(GameHub.SacrificeCutscene);
         }
 
 

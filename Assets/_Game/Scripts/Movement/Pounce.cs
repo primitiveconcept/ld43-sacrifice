@@ -17,8 +17,8 @@
 
         [SerializeField]
         private GameObject attackObject;
-        
-        
+
+        private bool isLocked;
         private IMovable movable;
         private float pounceDurationTimer;
         private float pounceCooldownTimer;
@@ -39,13 +39,26 @@
                 return;
             this.attackObject.SetActive(active);
         }
+
+
+        public void Lock()
+        {
+            this.isLocked = true;
+        }
+
+
+        public void Unlock()
+        {
+            this.isLocked = false;
+        }
         
         
         public void Activate()
         {
             if (this.pounceDurationTimer > 0
                 || this.pounceCooldownTimer > 0
-                || this.movable.MoveDirection == Vector2.zero)
+                || this.movable.MoveDirection == Vector2.zero
+                || this.isLocked)
             {
                 return;
             }

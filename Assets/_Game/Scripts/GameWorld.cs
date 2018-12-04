@@ -31,5 +31,15 @@
         {
             Instance.gameObject.SetActive(true);
         }
+
+
+        private void OnEnable()
+        {
+            if (Player.Get() != null
+                && Player.Get().Cult.Glory == 9)
+            {
+                GameHub.PlayCutscene(GameHub.EndCutscene);
+            }
+        }
     }
 }

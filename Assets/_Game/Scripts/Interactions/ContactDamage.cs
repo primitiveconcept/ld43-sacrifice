@@ -22,6 +22,15 @@
         private float counter;
 
 
+        #region Properties
+        public string[] OnlyAffectsTags
+        {
+            get { return this.onlyAffectsTags; }
+            set { this.onlyAffectsTags = value; }
+        }
+        #endregion
+
+
         public void OnCollisionEnter2D(Collision2D other)
         {
             if (!Tags.HasTag(other.gameObject, this.onlyAffectsTags))
