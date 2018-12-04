@@ -42,7 +42,7 @@
             else
             {
                 this.audio.pitch -= this.warbleRate;
-                if (this.audio.pitch < this.originalPitch + this.warbleAmount)
+                if (this.audio.pitch < this.originalPitch - this.warbleAmount)
                 {
                     this.audio.pitch = this.originalPitch - this.warbleAmount;
                     this.risingPitch = true;

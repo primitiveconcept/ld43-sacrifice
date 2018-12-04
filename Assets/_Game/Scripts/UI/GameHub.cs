@@ -10,6 +10,9 @@
         private static GameHub _instance;
 
         [SerializeField]
+        private Transform playerStart;
+        
+        [SerializeField]
         private UIPlayerHud playerHud;
 
         [SerializeField]
@@ -101,6 +104,16 @@
             Hide(this.playerHud.gameObject);
             Hide(this.sacrificeCutscene.gameObject);
             Show(this.gameWorld.gameObject);
+
+            if (this.playerStart != null)
+            {
+                Player.Get().transform.position = this.playerStart.position;
+                Camera.main.transform.position = new Vector3(
+                    this.playerStart.position.x,
+                    this.playerStart.position.y,
+                    Camera.main.transform.position.z);
+            }
+                
         }
     }
 }

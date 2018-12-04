@@ -93,6 +93,7 @@
             PlayerInput playerInput = interactor.GetComponent<PlayerInput>();
             
             ShowText("OH, AM I BORING YOU? FINE, FIGURE IT OUT YOURSELF!");
+            this.tutorialScriptIndex = this.tutorialScript.Length;
             this.showTextTimer = this.showTextDuration;
             this.interactable.HideCaption();
             playerInput.UnlockMovement();
